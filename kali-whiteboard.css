@@ -1,0 +1,75 @@
+:root {
+    --K: #f5a9b8;
+    --L: #e7c386;
+}
+
+.colorbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 5px;
+    flex-wrap: wrap-reverse;
+    background-image:
+        linear-gradient(to right,
+            var(--K),
+            #00000000 20%,
+            #00000000 80%,
+            var(--L)),
+        url("/k&.png"), linear-gradient(to right, var(--K), var(--L));
+    background-size: auto, 80px, auto;
+    background-repeat: repeat, repeat, repeat;
+    animation: panning 3s ease-in-out infinite;
+    animation-direction: alternate;
+    direction: rtl;
+}
+
+.option {
+    direction: ltr;
+}
+
+@keyframes panning {
+    0% {
+        background-position:
+            0% 0%,
+            0% 0%,
+            0% 0%;
+    }
+
+    100% {
+        background-position:
+            0% 0%,
+            25% 25%,
+            0% 0%;
+    }
+}
+
+.clr {
+    height: 50px;
+    width: 15px;
+    background-color: #f5a9b800;
+    transition: transform .5s;
+}
+
+.clr:hover {
+    transform: scale(1.2);
+}
+
+@font-face {
+    font-family: Kalico;
+    src: url("/KalicoPolygon.otf");
+}
+
+html,
+body {
+    font-family: 'Nunito';
+}
+
+summary {
+    font-family: 'Kalico';
+}
+
+.brushvis {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}

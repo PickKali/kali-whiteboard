@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kali's Whiteboard</title>
+    <link href="kali-whiteboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
+    <!-- Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&amp;display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div style="position: absolute; margin: 5px;">
+        <article class="colorbar overflow-auto" style="width: 10em; max-height: 25em;" id="toolbar">
+            <article class="option" style="width: 100%;">
+                <details name="colors">
+                    <summary>colors</summary>
+                    <div role="group">
+                        <div class="clr" data-clr="#000"></div>
+                        <div class="clr" data-clr="#28003d"></div>
+                        <div class="clr" data-clr="#242424"></div>
+                        <div class="clr" data-clr="#3c3c3c"></div>
+                        <div class="clr" data-clr="#fdfcf9"></div>
+                    </div>
+                    <div role="group">
+                        <div class="clr" data-clr="#fa8072"></div>
+                        <div class="clr" data-clr="#37ff00"></div>
+                        <div class="clr" data-clr="#fff600"></div>
+                        <div class="clr" data-clr="#c871ff"></div>
+                        <div class="clr" data-clr="#5e7d7e"></div>
+                    </div>
+                </details>
+            </article>
+
+            <article class="option" style="width: 100%;">
+                <details name="brush">
+                    <summary>brush</summary>
+                    <div>
+                        <button class="secondary brush" data-wth="4" style="width: 100%;">4
+                            <div class="brushvis" data-wth="4"></div>
+                        </button>
+                        <button class="secondary brush" data-wth="10" style="width: 100%;">10
+                            <div class="brushvis" data-wth="10"></div>
+                        </button>
+                        <button class="secondary brush" data-wth="24" style="width: 100%;">24
+                            <div class="brushvis" data-wth="24"></div>
+                        </button>
+                        <button class="secondary brush" data-wth="48" style="width: 100%;">48
+                            <div class="brushvis" data-wth="48"></div>
+                        </button>
+                    </div>
+                </details>
+            </article>
+
+            <article class="option" style="width: 100%;">
+                <details name="canvas">
+                    <summary>canvas</summary>
+                    <button class="clear outline">clear</button>
+                    <button class="save outline">save</button>
+                </details>
+            </article>
+        </article>
+        <button class="outline secondary" id="hide">hide</button>
+    </div>
+
+    <canvas id="canvas" class="info" style="padding: 0px; min-width: 100%; max-width: 100%;" width="466"
+        height="697"></canvas>
+    <script src="drawing.js"></script>
+
+</body>
+
+</html>
