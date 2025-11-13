@@ -15,7 +15,7 @@
             #00000000 20%,
             #00000000 80%,
             var(--L)),
-        url("/k&.png"), linear-gradient(to right, var(--K), var(--L));
+        url("/kali-whiteboard/public/k&.png"), linear-gradient(to right, var(--K), var(--L));
     background-size: auto, 80px, auto;
     background-repeat: repeat, repeat, repeat;
     animation: panning 3s ease-in-out infinite;
@@ -56,7 +56,7 @@
 
 @font-face {
     font-family: Kalico;
-    src: url("/KalicoPolygon.otf");
+    src: url("/kali-whiteboard/public/KalicoPolygon.otf");
 }
 
 html,
