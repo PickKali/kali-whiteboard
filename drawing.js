@@ -22,18 +22,23 @@ let looping = false;
 let loopHandle = null;
 let lastFrameTime = 0;
 
+let activePointers = new Set();
+let gestureStart = null;
+let gestureMoved = false;
+let drawIntentTimer = null;
+
 let clrs = document.querySelectorAll(".clr");
 clrs = Array.from(clrs);
 clrs.forEach((clr) => {
   clr.style.backgroundColor = clr.dataset.clr;
 
-  clr.addEventListener("click", () => {
+  clr.addEventListener("pointerdown", () => {
     ctx.strokeStyle = clr.dataset.clr;
   });
 });
 
 let clearBtn = document.querySelector(".clear");
-clearBtn.addEventListener("click", () => {
+clearBtn.addEventListener("pointerdown", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#FDFCF9";
@@ -42,7 +47,7 @@ clearBtn.addEventListener("click", () => {
 });
 
 let saveBtn = document.querySelector(".save");
-saveBtn.addEventListener("click", () => {
+saveBtn.addEventListener("pointerdown", () => {
   let data = canvas.toDataURL("imag/png");
   let a = document.createElement("a");
   a.href = data;
@@ -53,7 +58,7 @@ saveBtn.addEventListener("click", () => {
 let brushes = document.querySelectorAll(".brush");
 brushes = Array.from(brushes);
 brushes.forEach((brush) => {
-  brush.addEventListener("click", () => {
+  brush.addEventListener("pointerdown", () => {
     lineWidth = brush.dataset.wth;
   });
 });
@@ -64,20 +69,31 @@ brushvises.forEach((brushvis) => {
   brushvis.style.height = brushvis.dataset.wth+"px";
 });
 
-window.addEventListener("mousedown", (e) => {
+window.addEventListener("pointerdown", (e) => {
   if (e.target !== canvas) return;
-  draw = true;
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = "round";
-  currentPath = [
-    [{ x: e.offsetX, y: e.offsetY }],
-    ctx.lineWidth,
-    ctx.strokeStyle,
-  ];
-  stopLoop();
+  
+  activePointers.add(e.pointerId);
+  if (activePointers.size >= 2) {
+    gestureStart = performance.now();
+    gestureMoved = false;
+  }
+
+  drawIntentTimer = setTimeout(() => {
+    if (activePointers.size === 1) {
+      draw = true;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = "round";
+      currentPath = [
+        [{ x: e.offsetX, y: e.offsetY }],
+        ctx.lineWidth,
+        ctx.strokeStyle,
+      ];
+      stopLoop();
+    }
+  }, 60);
 });
 
-window.addEventListener("mouseup", (e) => {
+function endStroke() {
   if (draw) {
     draw = false;
     strokes.push(currentPath);
@@ -86,6 +102,24 @@ window.addEventListener("mouseup", (e) => {
     if (tb.hidden) {
       startInactivityTimer();
     }
+  }
+}
+
+window.addEventListener("pointerup", (e) => {
+  const fingersAtEnd = activePointers.size;
+  activePointers.delete(e.pointerId);
+  clearTimeout(drawIntentTimer);
+
+  if (!gestureMoved) {
+    if (fingersAtEnd === 2) {
+      undo();
+    }
+    if (fingersAtEnd === 3) {
+      redo();
+    }
+  }
+  if (activePointers.size === 0) {
+    endStroke()
   }
 });
 
@@ -138,8 +172,12 @@ ctx.rect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "#FDFCF9";
 ctx.fill();
 
-window.addEventListener("mousemove", (e) => {
-  if (!draw) {
+window.addEventListener("pointermove", (e) => {
+  if (activePointers.size >= 2) {
+    gestureMoved = true;
+    return;
+  }
+  if ((!draw)||(performance.now() - gestureStart < 200)) {
     return;
   }
   const x = e.offsetX;
@@ -154,7 +192,7 @@ window.addEventListener("mousemove", (e) => {
 });
 
 let hideBtn = document.querySelector("#hide");
-hideBtn.addEventListener("click", () => {
+hideBtn.addEventListener("pointerdown", () => {
   tb.hidden = !tb.hidden;
   if (tb.hidden) {
     startInactivityTimer();
@@ -177,8 +215,8 @@ function redraw(jiggle) {
 
     let deeppath = JSON.parse(JSON.stringify(path[0]));
     for (let i = 0; i < deeppath.length; i++) {
-      let oldx = jiggle ? Math.floor(Math.random() * 2) : 0;
-      let oldy = jiggle ? Math.floor(Math.random() * 2) : 0;
+      let oldx = jiggle ? Math.floor(Math.random() * 3) : 0;
+      let oldy = jiggle ? Math.floor(Math.random() * 3) : 0;
       deeppath[i].x += oldx;
       deeppath[i].y += oldy;
     }
@@ -209,4 +247,9 @@ document.addEventListener("keydown", (e) => {
 
   if (e.key.toLowerCase() === "z") undo();
   if (e.key.toLowerCase() === "x") redo();
+});
+
+window.addEventListener("pointercancel", (e) => {
+  endStroke()
+  activePointers.delete(e.pointerId);
 });
