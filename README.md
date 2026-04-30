@@ -1,5 +1,5 @@
 # Kali's Whiteboard
-Kali's minimalist whiteboard site for streams and other doodles. Adds a subtle movement so information doesn't feel so static.
+Kali's minimalist whiteboard site for backgrounds. I'll be using it for virtual backgrounds through OBS or for video backgrounds... also using OBS.
 
 One second after the drawing menu is closed, the canvas goes into "wiggle mode" which rerenders every stroke with each point at a random positions varied by a single pixel in the x, y, or both axis.
 Wiggle mode stops when a brush stroke happens or when the drawing menu is opened.
